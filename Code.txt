@@ -1,0 +1,381 @@
+#include <WiFi.h>
+#include <FirebaseESP32.h>
+#define ssid "<Put Your Wifi Username here>"  //WiFi SSID
+#define password "Put Your Wifi Password here"  //WiFi Password
+// Define Firebase credentials
+#define FIREBASE_HOST "Put Your Firebase HOST Account here"
+#define FIREBASE_AUTH "Put Your Firebase Auth Key here"
+FirebaseData firebaseData;
+FirebaseConfig config;
+FirebaseAuth auth;
+int firstLed = 15;
+int secondLed = 4;
+int thirdLed = 2;
+int fourthLed = 5;
+int fifthLed = 18;
+volatile bool has_interrupted1 = false;
+volatile bool has_interrupted2 = false;
+volatile bool has_interrupted3 = false;
+volatile bool has_interrupted4 = false;
+volatile bool has_interrupted5 = false;
+int load1, load2, load3, load4, Power;
+int previousload1, previousload2, previousload3, previousload4, previousPower;
+int button1State = 1;
+int button2State = 1;
+int button3State = 1;
+int button4State = 1;
+int button5State = 1;
+int previousbutton1State = 1;
+int previousbutton2State = 1;
+int previousbutton3State = 1;
+int previousbutton4State = 1;
+int previousbutton5State = 1;
+String feedback1 = "0", feedback2 = "0", feedback3 = "0", feedback4 = "0", feedback5 = "0";
+int button1 = 13;
+int button2 = 12;
+int button3 = 14;
+int button4 = 27;
+int button5 = 26;
+volatile bool first = true;
+volatile bool second = true;
+volatile bool third = true;
+volatile bool fourth = true;
+volatile bool fifth = true;
+void IRAM_ATTR handleButton1() { has_interrupted1 = true; }
+void IRAM_ATTR handleButton2() { has_interrupted2 = true; }
+void IRAM_ATTR handleButton3() { has_interrupted3 = true; }
+void IRAM_ATTR handleButton4() { has_interrupted4 = true; }
+void IRAM_ATTR handleButton5() { has_interrupted5 = true; }
+int interval = 3000;
+void setup() {  
+Serial.begin(9600);
+pinMode(firstLed, OUTPUT);  
+pinMode(secondLed, OUTPUT);
+pinMode(thirdLed, OUTPUT); 
+pinMode(fourthLed, OUTPUT); 
+pinMode(fifthLed, OUTPUT); 
+pinMode(button1,INPUT_PULLUP);
+pinMode(button2,INPUT_PULLUP);
+pinMode(button3,INPUT_PULLUP);
+pinMode(button4,INPUT_PULLUP);
+pinMode(button5,INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(button1), handleButton1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(button2), handleButton2, FALLING);
+  attachInterrupt(digitalPinToInterrupt(button3), handleButton3, FALLING);
+  attachInterrupt(digitalPinToInterrupt(button4), handleButton4, FALLING);
+  attachInterrupt(digitalPinToInterrupt(button5), handleButton5, FALLING);
+WiFi.begin (ssid, password);
+while(WiFi.status() != WL_CONNECTED)  {
+Serial.println (".");
+if(has_interrupted1) {
+    first = !first;
+    // digitalWrite(firstLed, first ? HIGH : LOW);
+    button1State = first ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+    has_interrupted1 = false;
+  }
+  if(has_interrupted2) {
+    second = !second;
+    // digitalWrite(secondLed, second ? HIGH : LOW);
+    button2State = second ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+    has_interrupted2 = false;
+  }
+  if(has_interrupted3) {
+    third = !third;
+    // digitalWrite(thirdLed, third ? HIGH : LOW);
+    button3State = third ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+    has_interrupted3 = false;
+  }
+  if(has_interrupted4) {
+    fourth = !fourth;
+    // digitalWrite(fourthLed, fourth ? HIGH : LOW);
+    button4State = fourth ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback4", feedback4);
+    has_interrupted4 = false;
+  }
+  if(has_interrupted5) {
+    fifth = !fifth;
+    // digitalWrite(fifthLed, fifth ? HIGH : LOW);
+    button5State = fifth ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback5", feedback5);
+    has_interrupted5 = false;
+  }
+  if(button1State == 0) digitalWrite(firstLed,HIGH);
+  else digitalWrite(firstLed,LOW);
+  if(button2State == 0) digitalWrite(secondLed,HIGH);
+  else  digitalWrite(secondLed,LOW);
+  if(button3State == 0) digitalWrite(thirdLed,HIGH);
+  else  digitalWrite(thirdLed,LOW);
+  if(button4State == 0) digitalWrite(fourthLed,HIGH);
+  else  digitalWrite(fourthLed,LOW);
+}
+Serial.println ("");
+Serial.println ("WiFi Connected!");
+config.host = FIREBASE_HOST;
+config.api_key = FIREBASE_AUTH;
+Firebase.begin(&config, &auth);
+delay(100);
+}
+void loop() {
+//  unsigned long currentMillis = millis();
+//  
+// if((WiFi.status() != WL_CONNECTED) && (currentMillis - previousMillis >= interval)) {
+// delay(500);
+// Serial.print("Reconnecting....");
+// WiFi.disconnect();
+// WiFi.reconnect();
+// previousMillis = currentMillis;
+//}
+while(WiFi.status() != WL_CONNECTED)  {
+  if(has_interrupted1) {
+    first = !first;
+    // digitalWrite(firstLed, first ? HIGH : LOW);
+    button1State = first ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+    has_interrupted1 = false.
+  }
+  if(has_interrupted2) {
+    second =! second.
+    // digitalWrite(secondLed, second ? HIGH: LOW);
+    button2State = second? 1: 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+    has_interrupted2 = false.
+  }
+  if(has_interrupted3) {
+    third =! third;
+    // digitalWrite(thirdLed, third ? HIGH: LOW);
+    button3State = third? 1: 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+    has_interrupted3 = false.
+  }
+  if(has_interrupted4) {
+    fourth =! fourth.
+    // digitalWrite(fourthLed, fourth ? HIGH: LOW);
+    button4State = fourth? 1: 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback4", feedback4);
+    has_interrupted4 = false.
+  }
+  if(has_interrupted5) {
+    fifth =! fifth.
+    // digitalWrite(fifthLed, fifth ? HIGH: LOW);
+    button5State = fifth? 1: 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback5", feedback5);
+    has_interrupted5 = false.
+  }
+   if(button1State == 0) digitalWrite(firstLed,HIGH);
+  else digitalWrite(firstLed,LOW);
+  if (button2State == 0) digitalWrite(secondLed,HIGH);
+  else  digitalWrite(secondLed,LOW);
+  if(button3State == 0) digitalWrite(thirdLed,HIGH);
+  else  digitalWrite(thirdLed,LOW);
+  if(button4State == 0) digitalWrite(fourthLed,HIGH);
+  else  digitalWrite(fourthLed,LOW);
+}
+if(has_interrupted1) {
+    first = !first;
+    // digitalWrite(firstLed, first ? HIGH : LOW);
+    button1State = first ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+    has_interrupted1 = false;
+  }
+  if(has_interrupted2) {
+    second = !second;
+    // digitalWrite(secondLed, second ? HIGH : LOW);
+    button2State = second ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+    has_interrupted2 = false;
+  }
+  if(has_interrupted3) {
+    third = !third;
+    // digitalWrite(thirdLed, third ? HIGH : LOW);
+    button3State = third ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+    has_interrupted3 = false;
+  }
+  if(has_interrupted4) {
+    fourth = !fourth;
+    // digitalWrite(fourthLed, fourth ? HIGH : LOW);
+    button4State = fourth ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback4", feedback4);
+    has_interrupted4 = false;
+  }
+  if(has_interrupted5) {
+    fifth = !fifth;
+    // digitalWrite(fifthLed, fifth ? HIGH : LOW);
+    button5State = fifth ? 1 : 0;
+    // Firebase.setString(firebaseData, "/Tuoyo_App/feedback5", feedback5);
+    has_interrupted5 = false;
+  }
+if(Firebase.get(firebaseData,"/Tuoyo_App/led1")) {
+ if (firebaseData.dataType() == "string") {
+ Power = firebaseData.stringData().toInt();
+ }
+}
+if(Firebase.get(firebaseData,"/Tuoyo_App/led2")) {
+ if (firebaseData.dataType() == "string") {
+ load1 = firebaseData.stringData().toInt();
+ }
+}
+if(Firebase.get(firebaseData,"/Tuoyo_App/led3")) {
+ if (firebaseData.dataType() == "string") {
+ load2 = firebaseData.stringData().toInt();
+ }
+}
+if (Firebase.get(firebaseData,"/Tuoyo_App/led4")) {
+ if (firebaseData.dataType() == "string") {
+ load3 = firebaseData.stringData().toInt();
+ }
+}
+if(Firebase.get(firebaseData,"/Tuoyo_App/led5")) {
+ if (firebaseData.dataType() == "string") {
+ load4 = firebaseData.stringData().toInt();
+ }
+}
+Serial.print("led1: ");
+Serial.println(Power);
+Serial.print("    led2: ");
+Serial.println(load1);
+Serial.print("    led3: ");
+Serial.println(load2);
+Serial.print("    led4: ");
+Serial.println(load3);
+Serial.print("    led5: ");
+Serial.println(load4);
+Serial.print("button1: ");
+Serial.println(button1State);
+Serial.print("    button2: ");
+Serial.println(button2State);
+Serial.print("    button3: ");
+Serial.println(button3State);
+Serial.print("    button4: ");
+Serial.println(button4State);
+Serial.print("    button5: ");
+Serial.println(button5State);
+if(Power == 1 && button1State == 0) {
+  digitalWrite(firstLed,HIGH);
+  feedback1 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Serial.println("App is On, Button is On");
+}
+else if(previousPower == 0 && Power == 1 && (button1State == 0 || button1State == 1)) {
+  digitalWrite(firstLed,HIGH);
+  feedback1 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Serial.println("App was Off, but now On, Button is On");
+}
+else if(previousPower == 1 && Power == 0 && (button1State == 0 || button1State == 1)) {
+  digitalWrite(firstLed,LOW);
+  feedback1 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Serial.println("App was On, but now Off, Button is On"); }
+else if(previousbutton1State == 0 &&  button1State == 1 && (Power == 1 || Power == 0)) {
+  digitalWrite(firstLed,LOW);
+  feedback1 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led1", "0");
+  Serial.println("Button was On, but now Off, App is On");
+}
+else if(previousbutton1State == 1 && button1State == 0 && (Power == 1 || Power == 0)) {
+  digitalWrite(firstLed,HIGH);
+  feedback1 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led1", "1");
+  Serial.println("Button was Off, but now On, App is On");
+}
+else if(Power == 0 && button1State == 1)  {
+  digitalWrite(firstLed,LOW);
+  feedback1 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback1", feedback1);
+  Serial.println("App is Off, Button is Off");
+}
+//FOR SECOND SLOT
+if(load1 == 1 && button2State == 0) {
+  digitalWrite(secondLed,HIGH);
+  feedback2 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Serial.println("App is On, Button is On");
+}
+else if(previousload1 == 0 && load1 == 1 && (button2State == 0 || button2State == 1)) {
+  digitalWrite(secondLed,HIGH);
+  feedback2 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Serial.println("App was Off, but now On, Button is On");
+}
+else if(previousload1 == 1 && load1 == 0 && (button2State == 0 || button2State == 1)) {
+  digitalWrite(secondLed,LOW);
+  feedback2 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Serial.println("App was On, but now Off, Button is On");
+}
+else if(previousbutton2State == 0 &&  button2State == 1 && (load1 == 1 || load1 == 0)) {
+  digitalWrite(secondLed,LOW);
+  feedback2 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led2", "0");
+  Serial.println("Button was On, but now Off, App is On");
+}
+else if(previousbutton2State == 1 && button2State == 0 && (load1 == 1 || load1 == 0)) {
+  digitalWrite(secondLed,HIGH);
+  feedback2 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led2", "1");
+  Serial.println("Button was Off, but now On, App is On");
+}
+else if(load1 == 0 && button2State == 1)  {
+  digitalWrite(secondLed,LOW);
+  feedback2 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback2", feedback2);
+  Serial.println("App is Off, Button is Off");
+}
+//FOR THIRD SLOT
+if(load2 == 1 && button3State == 0) {
+  digitalWrite(thirdLed,HIGH);
+  feedback3 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Serial.println("App is On, Button is On");
+}
+else if(previousload2 == 0 && load2 == 1 && (button3State == 0 || button3State == 1)) {
+  digitalWrite(thirdLed,HIGH);
+  feedback3 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Serial.println("App was Off, but now On, Button is On");
+}
+else if(previousload2 == 1 && load2 == 0 && (button3State == 0 || button3State == 1)) {
+  digitalWrite(thirdLed,LOW);
+  feedback3 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Serial.println("App was On, but now Off, Button is On");
+}
+else if(previousbutton3State == 0 &&  button3State == 1 && (load2 == 1 || load2 == 0)) {
+  digitalWrite(thirdLed,LOW);
+  feedback3 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led3", "0");
+  Serial.println("Button was On, but now Off, App is On");
+}
+else if(previousbutton3State == 1 && button3State == 0 && (load2 == 1 || load2 == 0)) {
+  digitalWrite(thirdLed,HIGH);
+  feedback3 = "1";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Firebase.setString(firebaseData, "/Tuoyo_App/led3", "1");
+  Serial.println("Button was Off, but now On, App is On");
+}
+else if(load2 == 0 && button3State == 1)  {
+  digitalWrite(thirdLed,LOW);
+  feedback3 = "0";
+  Firebase.setString(firebaseData, "/Tuoyo_App/feedback3", feedback3);
+  Serial.println("App is Off, Button is Off");
+}
+  previousbutton1State = button1State;
+  previousbutton2State = button2State;
+  previousbutton3State = button3State;
+  previousbutton4State = button4State;
+  previousbutton5State = button5State;
+   previousload1 = load1;
+   previousload2 = load2;
+   previousload3 = load3;
+   previousload4 = load4;
+   previousPower = Power;
+}
